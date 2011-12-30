@@ -1,0 +1,4 @@
+build
+dist
+django_ajaxcomments.egg-info
+*.pyc
