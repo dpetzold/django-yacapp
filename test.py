@@ -64,7 +64,7 @@ class TestSite(base.TestBase):
                 object_pk=17,
                 content_type='derrickpetzold.Post',
                 csrfmiddlewaretoken=self.csrf(self.host + 'login/'),
-                title=lorem.words(random.randint(3,6), common=False),
+                title=lorem.words(random.randint(3, 6), common=False),
                 text=lorem.paragraph())
 
         assert response.success == True, 'Post failed: %s' % (response.error)

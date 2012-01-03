@@ -3,9 +3,22 @@
   {{ comment.text|safe }}
   </p>
   <ul>
-    <li>{{ comment.created|timesince }} ago</li>
-    <li><a class="edit" id="edit-{{ comment.id }}" href="#">Edit</a></li>
-    <li><a class="delete" id="delete-{{ comment.id }}" href="#">Delete</a></li>
+    {% if comment.user.get_full_name %}
+      <li>by {{ comment.user.get_full_name }}</li>
+    {% else %}
+      <li>by {{ comment.user.username }}</li>
+    {% endif %}
+
+    <li>{{ comment.modified|timesince }} ago</li>
+  </ul>
+
+  <ul class="right">
+    {% if request.user == comment.user %}
+      <li><a class="edit" id="edit-{{ comment.id }}" href="#">Edit</a></li>
+      <li><a class="delete" id="delete-{{ comment.id }}" href="#">Delete</a></li>
+    {% else %}
+      <li><a class="reply" id="reply-{{ comment.id }}" href="#">Reply</a></li>
+    {% endif %}
   </ul>
 </div>
 <div style="clear: both"></div>

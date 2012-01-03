@@ -63,7 +63,7 @@ def comment_post(request, template='comment.html', logger=None):
                 Context({'comment':comment})))
 
 @log.logger()
-def comment_edit(request, comment_id, template='include/comment.html', logger=None):
+def comment_edit(request, template='include/comment.html', logger=None):
 
     if not request.user.is_authenticated():
         return AjaxResponse(False, error='User must be authenticated')
@@ -72,15 +72,15 @@ def comment_edit(request, comment_id, template='include/comment.html', logger=No
         return AjaxResponse(False, error='Post required')
 
     try:
-        text = request.POST['text']
-    except MultiValueDictKeyError as e:
-        logger.error(str(e))
+        comment = models.Comment.objects.get(
+            id=request.POST['comment_id'].replace('comment-', ''))
+    except models.Comment.DoesNotExist as e:
         return AjaxResponse(False, error=str(e))
 
     try:
-        comment = models.Comment.objects.get(
-            id=comment_id.replace('comment-', ''))
-    except models.Comment.DoesNotExist as e:
+        text = request.POST['text']
+    except MultiValueDictKeyError as e:
+        logger.error(str(e))
         return AjaxResponse(False, error=str(e))
 
     if request.user != comment.user:
