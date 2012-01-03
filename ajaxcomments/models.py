@@ -1,9 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+
 class Comment(models.Model):
 
-    user_id = models.ForeignKey(User)
+    user = models.ForeignKey(User)
+    parent = models.ForeignKey('Comment', null=True)
 
     title = models.TextField()
     text = models.TextField()
@@ -13,7 +17,5 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
-    modified = models.DateTimeField(null=True)
+    modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-
-
