@@ -95,17 +95,15 @@ def comment_edit(request, template='include/comment.html', logger=None):
     return AjaxResponse(True, text=comment.text)
 
 @log.logger()
-def comment_delete(request, comment_id, logger=None):
+def comment_delete(request, logger=None):
 
     if not request.user.is_authenticated():
         return AjaxResponse(False, error='User must be authenticated')
 
-    _id = comment_id.replace('comment-', '')
-
     try:
-        comment = models.Comment.objects.get(id=_id)
+        comment = models.Comment.objects.get(
+            id=request.POST['comment_id'].replace('comment-', ''))
     except models.Comment.DoesNotExist as e:
-        logger.error('Comment %s does not exist' % (_id))
         return AjaxResponse(False, error=str(e))
 
     if request.user != comment.user:
