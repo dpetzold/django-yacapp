@@ -103,6 +103,13 @@ ul {
   height: 16px;
 }
 
+.comment-reply {
+  display: none;
+}
+
+#dialog {
+  display: none;
+}
 
 
 .form textarea {

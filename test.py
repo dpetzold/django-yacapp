@@ -63,16 +63,29 @@ class TestSite(base.TestBase):
                 self.host + 'comment/post/',
                 object_pk=17,
                 content_type='derrickpetzold.Post',
-                csrfmiddlewaretoken=self.csrf(self.host + 'login/'),
                 title=lorem.words(random.randint(3, 6), common=False),
                 text=lorem.paragraph())
 
         assert response.success == True, 'Post failed: %s' % (response.error)
         self.output.writeln('Post: Ok (%.2f)' % (response.run_time))
 
+    def test_reply(self):
+        response = self.retrieve(
+                self.host + 'comment/post/',
+                object_pk=17,
+                parent_id=1,
+                content_type='derrickpetzold.Post',
+                title=lorem.words(random.randint(3, 6), common=False),
+                text=lorem.paragraph())
+
+        assert response.success == True, 'Reply failed: %s' % (response.error)
+        self.output.writeln('Reply: Ok (%.2f)' % (response.run_time))
+
+
 def main():
 
     TestSite(
+        csrf_url='/login/',
         settings=settings,
         formatter=formatter.YamlFormatter()).run()
 

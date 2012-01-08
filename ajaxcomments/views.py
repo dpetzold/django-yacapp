@@ -10,8 +10,8 @@ import json
 import logging
 import time
 
-from baku.django.ajax import AjaxResponse
-from baku.django import log
+from dago.ajax import AjaxResponse
+from dago import log
 
 #from ajaxcomments import signals
 from ajaxcomments import models
@@ -24,6 +24,11 @@ def comment_post(request, template='comment.html', logger=None):
 
     if not request.POST:
         return AjaxResponse(False, error='Post required')
+
+    comment_text = request.POST['text']
+    if len(comment_text) == 0:
+        return AjaxResponse(False, error='Comment must contain some text %s' %
+                (len(comment_text)))
 
     # Look up the object we're trying to comment about
     content_type = request.POST.get('content_type')
@@ -52,9 +57,15 @@ def comment_post(request, template='comment.html', logger=None):
     comment = models.Comment(
         user=request.user,
         content_object=content_object,
-        text=request.POST['text'])
+        text=comment_text)
+
     if 'title' in request.POST:
         comment.title = request.POST['title']
+    if 'parent_id' in request.POST:
+        comment.parent = models.Comment.objects.get(
+                pk=int(request.POST['parent_id'].replace('comment-', '')))
+        comment.level = comment.parent.level + 1
+
     comment.save()
 
     logger.info('%s added a comment' % (request.user))
