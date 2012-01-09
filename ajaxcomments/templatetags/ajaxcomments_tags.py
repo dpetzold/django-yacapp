@@ -10,8 +10,9 @@ logger = logging.getLogger('django.ajaxcomments')
 
 class RenderComments(template.Node):
 
-    def __init__(self, object_expr=None):
+    def __init__(self, object_expr, template):
         self.object_expr = object_expr
+        self.template = template
 
     @classmethod
     def handle_token(cls, parser, token):
@@ -20,23 +21,28 @@ class RenderComments(template.Node):
         if tokens[1] != 'for':
             raise template.TemplateSyntaxError("Second argument in %r tag must be 'for'" %          tokens[0])
 
+        if tokens[3] != 'with':
+            raise template.TemplateSyntaxError("Thrid argument in %r tag must be 'with'" %          tokens[0])
+
         # {% render_comment_form for obj %}
-        if len(tokens) == 3:
-            return cls(object_expr=parser.compile_filter(tokens[2]))
+        if len(tokens) == 5:
+            return cls(
+                parser.compile_filter(tokens[2]),
+                tokens[4].strip('"'))
+        raise template.TemplateSyntaxError('Wrong number of arguments')
 
     def render_comment(self, obj, comment, context):
 
        replies = ''
-       for child in obj.comments.filter(parent=comment).order_by('created'):
+       childern = obj.comments.filter(parent=comment)
+       for child in childern.order_by('created'):
            replies += self.render_comment(obj, child, context)
-
        text = render_to_string(
-               'comment.html', {
+               self.template, {
                    'comment': comment,
                    'replies': replies,
                 },
                context)
-
        return text
 
     def render(self, context):
@@ -47,10 +53,10 @@ class RenderComments(template.Node):
             parent__isnull=True,
             deleted__isnull=True)
 
-        comments_text = ''
+        comment_text = ''
         for comment in comments:
-            comments_text += self.render_comment(obj, comment, context)
-        return comments_text
+            comment_text += self.render_comment(obj, comment, context)
+        return comment_text
 
 def render_comments(parser, token):
     return RenderComments.handle_token(parser, token)
