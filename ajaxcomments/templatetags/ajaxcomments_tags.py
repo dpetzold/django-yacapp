@@ -20,23 +20,14 @@ class RenderComments(template.Node):
         if len(tokens) == 3:
             return cls(object_expr=parser.compile_filter(tokens[2]))
 
-        # {% render_comment_form for app.models pk %}
-#        elif len(tokens) == 4:
-#            return cls(
-#                ctype = BaseCommentNode.lookup_content_type(tokens[2], tokens[0]),
-#                object_pk_expr = parser.compile_filter(tokens[3])
-#            )
-
-
     def render_comment(self, obj, comment, context):
-
-           text = render_to_string(
-                   'comment.html',
-                   {'comment': comment},
-                   context)
-           for child in obj.comments.filter(parent=comment):
-               text += self.render_comment(obj, child, context)
-           return text
+       text = render_to_string(
+               'comment.html',
+               {'comment': comment},
+               context)
+       for child in obj.comments.filter(parent=comment):
+           text += self.render_comment(obj, child, context)
+       return text
 
     def render(self, context):
 
@@ -49,11 +40,9 @@ class RenderComments(template.Node):
         comments_text = ''
         for comment in comments:
             comments_text += self.render_comment(obj, comment, context)
-
         return comments_text
 
 def render_comments(parser, token):
-
     return RenderComments.handle_token(parser, token)
 
 register.tag('comments', render_comments)
