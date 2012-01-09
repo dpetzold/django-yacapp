@@ -14,10 +14,16 @@
 
   <ul class="right">
     {% if request.user == comment.user %}
-      <li><a class="edit" id="edit-{{ comment.id }}" href="#">Edit</a></li>
-      <li><a class="delete" id="delete-{{ comment.id }}" href="#">Delete</a></li>
+    <li>
+      <a id="edit-{{ comment.id }}" onclick="edit_comment(this)" href="#">Edit</a>
+    </li>
+    <li>
+      <a id="delete-{{ comment.id }}" onclick="delete_comment(this)" href="#">Delete</a>
+    </li>
     {% else %}
-      <li><a class="reply" id="reply-{{ comment.id }}" href="#">Reply</a></li>
+    <li>
+      <a id="reply-{{ comment.id }}" onclick="reply_comment(this)" href="#">Reply</a>
+    </li>
     {% endif %}
   </ul>
 

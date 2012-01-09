@@ -16,8 +16,11 @@ from dago import log
 #from ajaxcomments import signals
 from ajaxcomments import models
 
-@log.logger()
-def comment_post(request, template='comment.html', logger=None):
+import logging
+
+logger = logging.getLogger('django.ajaxcomments')
+
+def comment_post(request, template='comment.html'):
 
     if not request.user.is_authenticated():
         return AjaxResponse(False, error='User must be authenticated')
@@ -68,10 +71,11 @@ def comment_post(request, template='comment.html', logger=None):
 
     comment.save()
 
-    logger.info('%s added a comment' % (request.user))
+    logger.info('%s added a comment %s' % (request.user, comment.user))
     return AjaxResponse(True,
-            comment=loader.get_template(template).render(
-                Context({'comment':comment})))
+            comment=loader.render_to_string(template,
+                {'comment':comment},
+            context_instance=RequestContext(request)))
 
 @log.logger()
 def comment_edit(request, template='include/comment.html', logger=None):

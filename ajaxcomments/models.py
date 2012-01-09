@@ -10,7 +10,7 @@ class Comment(models.Model):
     parent = models.ForeignKey('Comment', null=True)
 
     title = models.TextField()
-    level = models.IntegerField(default=0)
+    level = models.IntegerField(default=1)
     text = models.TextField()
     deleted = models.DateTimeField(null=True)
 

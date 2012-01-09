@@ -38,6 +38,29 @@ function edit(elem) {
   });
 }
 
+function delete_comment(comment) {
+
+  var comment_id = $(comment).attr('id').replace('delete', 'comment');
+  var comment = '#' + comment_id;
+  $.post('/comment/delete/', {
+      'comment_id': comment_id,
+      'csrfmiddlewaretoken': csrf_token,
+  }, function(response) {
+    $(comment).hide('fast');
+    container = $('.comments');
+    $('html, body').animate({ scrollTop: container.offset().top }, 200);
+  });
+}
+
+function reply_comment(comment) {
+
+  var comment_id = $(comment).attr('id').replace('reply', 'comment');
+  var comment = $('#' + comment_id + ' p');
+  $('#parent_id').attr('value', comment_id);
+  $('.comment-text').text(comment.html());
+  $("#dialog").dialog({width: 640, height: 800});
+}
+
 $(document).ready(function() {
 
     $('.reply-post').click(function(e) {
@@ -52,37 +75,13 @@ $(document).ready(function() {
       }, function(response) {
         if (response.success) {
           $("#dialog").dialog('close');
-          $('#parent_id').append(response.data.comment)
+          $('#id_reply').val('');
+          $('#' + comment_id).append(response.data.comment)
         }
         else {
           $('.error').html('<h3>' + response.error + '</h3>');
         }
       }, "json");
-    });
-
-    $('.reply').click(function(e) {
-      var comment_id = $(this).attr('id').replace('reply', 'comment');
-      var comment = $('#' + comment_id + ' p');
-      $('#parent_id').attr('value', comment_id);
-      $('.comment-text').text(comment.html());
-      $("#dialog").dialog({width: 640, height: 800});
-    });
-
-    $('.edit').click(function(e) {
-      edit(this);
-    });
-
-    $('.delete').click(function(e) {
-      var comment_id = $(this).attr('id').replace('delete', 'comment');
-      var comment = '#' + comment_id;
-      $.post('/comment/delete/', {
-          'comment_id': comment_id,
-          'csrfmiddlewaretoken': csrf_token,
-      }, function(response) {
-        $(comment).hide('fast');
-        container = $('.comments');
-        $('html, body').animate({ scrollTop: container.offset().top }, 200);
-      });
     });
 
     $('.post').click(function(e) {
@@ -98,7 +97,6 @@ $(document).ready(function() {
           $('.comments').append(response.data.comment)
           $('.comment-form').hide();
           $('.error').val('');
-          $('.message').html('<h3>Thank you. Your comment has been posted.</h3>');
         }
         else {
           $('.error').html('<h3>' + response.error + '</h3>');
