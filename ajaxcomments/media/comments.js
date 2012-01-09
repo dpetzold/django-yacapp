@@ -1,4 +1,8 @@
-function edit(elem) {
+
+function comment_edit(comment, event) {
+
+  event.preventDefault();
+
   comment_id = $(elem).attr('id').replace('edit', 'comment');
   comment = $('#' + comment_id + ' p');
   html = comment.html().replace('<br>', '\n', 'g').replace(/^\s+|\s+$/g, '');
@@ -9,7 +13,7 @@ function edit(elem) {
 
   $('#' + comment_id + ' textarea').width(comment.width());
   $('#' + comment_id + ' textarea').height(comment.height());
-  $('html, body').animate({ scrollTop: comment.offset().top }, 200);
+  //$('html, body').animate({ scrollTop: comment.offset().top }, 200);
 
   $(elem).unbind();
   $(elem).text('Save').click(function() {
@@ -38,7 +42,9 @@ function edit(elem) {
   });
 }
 
-function delete_comment(comment) {
+function comment_delete(comment, event) {
+
+  event.preventDefault();
 
   var comment_id = $(comment).attr('id').replace('delete', 'comment');
   var comment = '#' + comment_id;
@@ -48,11 +54,13 @@ function delete_comment(comment) {
   }, function(response) {
     $(comment).hide('fast');
     container = $('.comments');
-    $('html, body').animate({ scrollTop: container.offset().top }, 200);
+    //$('html, body').animate({ scrollTop: container.offset().top }, 200);
   });
 }
 
-function reply_comment(comment) {
+function comment_reply(comment, event) {
+
+  event.preventDefault();
 
   var comment_id = $(comment).attr('id').replace('reply', 'comment');
   var comment = $('#' + comment_id + ' p');
@@ -61,46 +69,60 @@ function reply_comment(comment) {
   $("#dialog").dialog({width: 640, height: 800});
 }
 
+function comment_postreply(event) {
+
+  event.preventDefault();
+
+  var comment_id = $('#parent_id').attr('value');
+  $.post('/comment/post/', {
+    'text': $('#id_reply').val(),
+    'parent_id': $('#parent_id').val(),
+    'object_pk': object_pk,
+    'content_type': content_type,
+    'csrfmiddlewaretoken': csrf_token,
+  }, function(response) {
+    if (response.success) {
+      $("#dialog").dialog('close');
+      $('#id_reply').val('');
+      $('#' + comment_id).append(response.data.comment)
+    }
+    else {
+      $('.error').html('<h3>' + response.error + '</h3>');
+    }
+  }, "json");
+}
+
+function comment_post(event) {
+
+  event.preventDefault();
+
+  $.post('/comment/post/', {
+    'text': $('#id_text').val(),
+    'object_pk': object_pk,
+    'content_type': content_type,
+    'csrfmiddlewaretoken': csrf_token,
+  }, function(response) {
+    if (response.success) {
+      $('.error').val('');
+      $('textarea').val('');
+      $('#id_title').val('');
+      $('.comment-form').hide();
+      $('.comments').append(response.data.comment)
+    }
+    else {
+      $('.error').html('<h3>' + response.error + '</h3>');
+    }
+  }, "json");
+
+}
+
 $(document).ready(function() {
 
     $('.reply-post').click(function(e) {
-      var comment_id = $('#parent_id').attr('value');
-
-      $.post('/comment/post/', {
-        'text': $('#id_reply').val(),
-        'parent_id': $('#parent_id').val(),
-        'object_pk': object_pk,
-        'content_type': content_type,
-        'csrfmiddlewaretoken': csrf_token,
-      }, function(response) {
-        if (response.success) {
-          $("#dialog").dialog('close');
-          $('#id_reply').val('');
-          $('#' + comment_id).append(response.data.comment)
-        }
-        else {
-          $('.error').html('<h3>' + response.error + '</h3>');
-        }
-      }, "json");
+        comment_postreply(e);
     });
 
     $('.post').click(function(e) {
-      $.post('/comment/post/', {
-        'text': $('#id_text').val(),
-        'object_pk': object_pk,
-        'content_type': content_type,
-        'csrfmiddlewaretoken': csrf_token,
-      }, function(response) {
-        if (response.success) {
-          $('textarea').val('');
-          $('#id_title').val('');
-          $('.comments').append(response.data.comment)
-          $('.comment-form').hide();
-          $('.error').val('');
-        }
-        else {
-          $('.error').html('<h3>' + response.error + '</h3>');
-        }
-      }, "json");
+        comment_post(e);
     });
 });

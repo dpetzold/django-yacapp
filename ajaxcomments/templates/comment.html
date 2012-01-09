@@ -9,20 +9,20 @@
       <li>by {{ comment.user.username }}</li>
     {% endif %}
 
-    <li>{{ comment.modified|timesince }} ago</li>
+    <li>{{ comment.created|timesince }} ago</li>
   </ul>
 
   <ul class="right">
     {% if request.user == comment.user %}
     <li>
-      <a id="edit-{{ comment.id }}" onclick="edit_comment(this)" href="#">Edit</a>
+      <a id="edit-{{ comment.id }}" onclick="comment_edit(this, event)" href="#">Edit</a>
     </li>
     <li>
-      <a id="delete-{{ comment.id }}" onclick="delete_comment(this)" href="#">Delete</a>
+      <a id="delete-{{ comment.id }}" onclick="comment_delete(this, event)" href="#">Delete</a>
     </li>
     {% else %}
     <li>
-      <a id="reply-{{ comment.id }}" onclick="reply_comment(this)" href="#">Reply</a>
+      <a id="reply-{{ comment.id }}" onclick="comment_reply(this, event)" href="#">Reply</a>
     </li>
     {% endif %}
   </ul>
