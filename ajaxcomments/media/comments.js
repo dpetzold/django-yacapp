@@ -60,7 +60,7 @@
       var comment = $('#' + comment_id + ' p');
       $('#parent_id').attr('value', comment_id);
       $('.comment-text').text(comment.html());
-      $("#dialog").dialog({width: 640, height: 800});
+      $(".comment-reply").dialog({width: 640, height: 900});
     }
 
     window.comment_postreply = function(event) {

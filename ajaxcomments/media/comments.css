@@ -1,3 +1,14 @@
+.comment {
+  clear: both;
+}
+
+.comment p {
+  background-color: #EEEEEE;
+  border-radius: 15px 15px 15px 15px;
+  border-radius: 15px;
+  padding: 10px 10px 10px 10px;
+}
+
 .replies {
   margin: 30px 0 0 0;
 }
@@ -22,19 +33,15 @@
   width: 560px;
 }
 
-.comment p {
-  background-color: #EEEEEE;
-  border-radius: 15px 15px 15px 15px;
-  border-radius: 15px;
-  padding: 10px 10px 10px 10px;
-}
-
 .comments {
   margin: 0 0 20px 0;
 }
 
-.comments h2 {
-  float: left;
+#post {
+}
+
+.post {
+  margin: 0 0 20px 0;
 }
 
 .comments ul {
@@ -50,34 +57,40 @@
   padding: 0 10px 0 0;
 }
 
-.comment-form {
-  float: left;
-}
-
 .buttons {
   margin: 10px 0 0 0;
   clear: both;
   width: 600px;
 }
 
-.post {
-  float: right;
-  margin: 5px 0 0 0;
-}
-
 .comment-form input {
   width: 600px;
-}
-
-.message {
-  width: 600px;
-  text-align: center;
 }
 
 .error {
   width: 600px;
   color: red;
   text-align: center;
+}
+
+.comment-form {
+  width: 610px;
+  height: 330px;
+}
+
+.post-button {
+  float: right;
+  margin: 5px 0 0 0;
+}
+
+.post-reply {
+  float: right;
+  margin: 5px 5px 0 0;
+}
+
+.edit-save {
+  float: right;
+  margin: 5px 5px 0 0;
 }
 
 .comment-edit {
