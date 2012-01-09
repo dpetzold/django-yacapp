@@ -1,7 +1,5 @@
 <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
-  <p id="p-{{ comment.id }}">
-    {{ comment.text|safe }}
-  </p>
+  <p id="p-{{ comment.id }}">{{ comment.text|safe }}</p>
   <ul>
     {% if comment.user.get_full_name %}
       <li>by {{ comment.user.get_full_name }}</li>
