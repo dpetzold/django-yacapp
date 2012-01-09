@@ -1,6 +1,6 @@
 <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
   <p id="p-{{ comment.id }}">
-  {{ comment.text|safe }}
+    {{ comment.text|safe }}
   </p>
   <ul>
     {% if comment.user.get_full_name %}
@@ -20,5 +20,11 @@
       <li><a class="reply" id="reply-{{ comment.id }}" href="#">Reply</a></li>
     {% endif %}
   </ul>
+
+  {% if replies != '' %}
+    <div class="replies">
+      {{ replies|safe }}
+    </div>
+  {% endif %}
 </div>
 <div style="clear: both"></div>
