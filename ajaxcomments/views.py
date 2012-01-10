@@ -3,7 +3,7 @@ from django.utils.html import escape
 from django.db import models as django_models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.template import loader, RequestContext, Context
-
+from django.utils import html
 
 import datetime
 import json
@@ -28,7 +28,7 @@ def comment_post(request, template='comment.html'):
     if not request.POST:
         return AjaxResponse(False, error='Post required')
 
-    comment_text = request.POST['text']
+    comment_text = html.escape(request.POST['text'])
     if len(comment_text) == 0:
         return AjaxResponse(False, error='Comment must contain some text %s' %
                 (len(comment_text)))
