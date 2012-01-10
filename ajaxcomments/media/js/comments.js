@@ -120,7 +120,7 @@ $(document).ready(function() {
         comment_postreply(e);
     });
 
-    $('.post').click(function(e) {
+    $('.post-button').click(function(e) {
         comment_post(e);
     });
 });
