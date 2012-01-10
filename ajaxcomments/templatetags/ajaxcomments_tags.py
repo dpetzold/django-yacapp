@@ -33,17 +33,21 @@ class RenderComments(template.Node):
 
     def render_comment(self, obj, comment, context):
 
-       replies = ''
-       childern = obj.comments.filter(parent=comment)
-       for child in childern.order_by('created'):
+        replies = ''
+        childern = obj.comments.filter(parent=comment)
+        for child in childern.order_by('created'):
            replies += self.render_comment(obj, child, context)
-       text = render_to_string(
+
+        if replies == '':
+            replies = None
+
+        text = render_to_string(
                self.template, {
                    'comment': comment,
                    'replies': replies,
                 },
                context)
-       return text
+        return text
 
     def render(self, context):
 
