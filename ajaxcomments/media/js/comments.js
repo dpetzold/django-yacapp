@@ -78,6 +78,7 @@
         if (response.success) {
           $('.comment-reply').dialog('close');
           $('#id_reply').val('');
+          $('.comment-count').text(response.data.comment_count);
           $('#' + comment_id).append(response.data.comment)
         }
         else {
@@ -101,6 +102,7 @@
           $('textarea').val('');
           $('#id_title').val('');
           $('.comment-form').hide();
+          $('.comment-count').text(response.data.comment_count);
           $('.comments').append(response.data.comment)
         }
         else {

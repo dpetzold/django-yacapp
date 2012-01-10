@@ -73,9 +73,10 @@ def comment_post(request, template='comment.html'):
 
     logger.info('%s added a comment %s' % (request.user, comment.user))
     return AjaxResponse(True,
-            comment=loader.render_to_string(template,
-                {'comment':comment},
-            context_instance=RequestContext(request)))
+            comment=loader.render_to_string(template, {
+                'comment':comment,
+            }, context_instance=RequestContext(request)),
+            comment_count=content_object.comments.all().count())
 
 @log.logger()
 def comment_edit(request, template='include/comment.html', logger=None):
