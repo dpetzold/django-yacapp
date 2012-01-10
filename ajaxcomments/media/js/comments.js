@@ -50,7 +50,12 @@
       }, function(response) {
         $(comment).hide('fast');
         container = $('.comments');
-        $('.comment-count').text(response.data.comment_count);
+
+        if ( response.data.comment_count == 1 ) {
+            $('.comment-count').text(response.data.comment_count + ' Comment');
+        } else {
+            $('.comment-count').text(response.data.comment_count + ' Comments');
+        }
       });
     }
 
@@ -104,7 +109,13 @@
           $('textarea').val('');
           $('#id_title').val('');
           $('.comment-form').hide();
-          $('.comment-count').text(response.data.comment_count);
+
+          if ( response.data.comment_count == 1 ) {
+              $('.comment-count').text(response.data.comment_count + ' Comment');
+          } else {
+              $('.comment-count').text(response.data.comment_count + ' Comments');
+          }
+
           $('.comments').append(response.data.comment)
         }
         else {

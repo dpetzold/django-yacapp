@@ -76,12 +76,15 @@ def comment_post(request, template='comment.html'):
 
     comment.save()
 
+    content_object.comment_count += 1
+    content_object.save()
+
     logger.info('%s added a comment %s' % (request.user, comment.user))
     return AjaxResponse(True,
             comment=loader.render_to_string(template, {
                 'comment':comment,
             }, context_instance=RequestContext(request)),
-            comment_count=content_object.comments.filter(deleted__isnull=True).count())
+            comment_count=content_object.comment_count)
 
 @log.logger()
 def comment_edit(request, template='include/comment.html', logger=None):
@@ -138,6 +141,9 @@ def comment_delete(request, logger=None):
     comment.deleted = datetime.datetime.now()
     comment.save()
 
+    content_object.comment_count -= 1
+    content_object.save()
+
     logger.info('%s deleted a comment' % (request.user))
     return AjaxResponse(True,
-            comment_count=content_object.comments.filter(deleted__isnull=True).count())
+            comment_count=content_object.comment_count)
