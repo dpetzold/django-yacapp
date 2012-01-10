@@ -20,6 +20,31 @@ import logging
 
 logger = logging.getLogger('django.ajaxcomments')
 
+class GetContentObjectError(Exception):
+    pass
+
+def get_content_object(content_type, object_pk):
+
+    # Look up the object we're trying to comment about
+    if content_type is None or object_pk is None:
+        raise GetContentObjectError('Missing content_type or object_pk field.')
+    try:
+        model = django_models.get_model(*content_type.split('.', 1))
+        content_object = model._default_manager.using(None).get(pk=object_pk)
+    except TypeError:
+        raise GetContentObjectError('Invalid content_type value: %r' % escape(content_type))
+    except AttributeError:
+        raise GetContentObjectError('The given content-type %r does not resolve to a valid model.' % \
+                escape(content_type))
+    except ObjectDoesNotExist:
+        raise GetContentObjectError('No object matching content-type %r and object PK %r exists.' % \
+                (escape(content_type), escape(object_pk)))
+    except (ValueError, ValidationError), e:
+        raise GetContentObjectError(
+            'Attempting go get content-type %r and object PK %r exists raised %s' % \
+                (escape(content_type), escape(object_pk), e.__class__.__name__))
+    return content_object
+
 def comment_post(request, template='comment.html'):
 
     if not request.user.is_authenticated():
@@ -33,29 +58,9 @@ def comment_post(request, template='comment.html'):
         return AjaxResponse(False, error='Comment must contain some text %s' %
                 (len(comment_text)))
 
-    # Look up the object we're trying to comment about
-    content_type = request.POST.get('content_type')
-    object_pk = request.POST.get('object_pk')
-    if content_type is None or object_pk is None:
-        return AjaxResponse(False, error='Missing content_type or object_pk field.')
-    try:
-        model = django_models.get_model(*content_type.split('.', 1))
-        content_object = model._default_manager.using(None).get(pk=object_pk)
-    except TypeError:
-        return AjaxResponse(False,
-            error='Invalid content_type value: %r' % escape(content_type))
-    except AttributeError:
-        return AjaxResponse(False,
-            error='The given content-type %r does not resolve to a valid model.' % \
-                escape(content_type))
-    except ObjectDoesNotExist:
-        return AjaxResponse(False,
-            error='No object matching content-type %r and object PK %r exists.' % \
-                (escape(content_type), escape(object_pk)))
-    except (ValueError, ValidationError), e:
-        return AjaxResponse(False,
-            error='Attempting go get content-type %r and object PK %r exists raised %s' % \
-                (escape(content_type), escape(object_pk), e.__class__.__name__))
+    content_object = get_content_object(
+        request.POST.get('content_type'),
+        request.POST.get('object_pk'))
 
     comment = models.Comment(
         user=request.user,
@@ -76,7 +81,7 @@ def comment_post(request, template='comment.html'):
             comment=loader.render_to_string(template, {
                 'comment':comment,
             }, context_instance=RequestContext(request)),
-            comment_count=content_object.comments.all().count())
+            comment_count=content_object.comments.filter(deleted__isnull=True).count())
 
 @log.logger()
 def comment_edit(request, template='include/comment.html', logger=None):
@@ -116,6 +121,10 @@ def comment_delete(request, logger=None):
     if not request.user.is_authenticated():
         return AjaxResponse(False, error='User must be authenticated')
 
+    content_object = get_content_object(
+        request.POST.get('content_type'),
+        request.POST.get('object_pk'))
+
     try:
         comment = models.Comment.objects.get(
             id=request.POST['comment_id'].replace('comment-', ''))
@@ -130,4 +139,5 @@ def comment_delete(request, logger=None):
     comment.save()
 
     logger.info('%s deleted a comment' % (request.user))
-    return AjaxResponse(True)
+    return AjaxResponse(True,
+            comment_count=content_object.comments.filter(deleted__isnull=True).count())

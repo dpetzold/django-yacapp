@@ -44,11 +44,13 @@
       var comment = '#' + comment_id;
       $.post('/comment/delete/', {
           'comment_id': comment_id,
+          'object_pk': object_pk,
+          'content_type': content_type,
           'csrfmiddlewaretoken': csrf_token,
       }, function(response) {
         $(comment).hide('fast');
         container = $('.comments');
-        //$('html, body').animate({ scrollTop: container.offset().top }, 200);
+        $('.comment-count').text(response.data.comment_count);
       });
     }
 
