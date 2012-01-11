@@ -22,7 +22,7 @@ Installation
 ------------
 #. Get the source.::
 
-   pip install -e git+https://github.com/dpetzold/django-yacapp
+    pip install -e git+https://github.com/dpetzold/django-yacapp
 
 #. Add yacapp INSTALL_APPS your project's ``settings.py``::
 
