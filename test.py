@@ -40,29 +40,11 @@ class TestSite(base.TestBase):
         # login
         super(TestSite, self).__init__(**kwargs)
 
-    def test_login(self):
-        response = self.retrieve(
-                self.host + 'login/',
-                username='testuser',
-                password='1userFoo')
-        assert response.success == True, 'Login failed: %s' % (response.error)
-        self.output.writeln('Login: Ok (%.2f)' % (response.run_time))
-
-    def test_logout(self):
-        response = self.retrieve(self.host + 'logout/')
-        assert response.success == True, 'Logout failed: %s' % (response.error)
-        self.output.writeln('Logout: Ok (%.2f)' % (response.run_time))
-
-    def test_status(self):
-        response = self.retrieve(self.host + 'status/')
-        assert response.success == True, 'Status failed: %s' % (response.error)
-        self.output.writeln('Status: Ok (%.2f)' % (response.run_time))
-
     def test_post(self):
         response = self.retrieve(
                 self.host + 'comment/post/',
-                object_pk=17,
-                content_type='derrickpetzold.Post',
+                object_pk=1,
+                content_type='derrickpetzold.post',
                 title=lorem.words(random.randint(3, 6), common=False),
                 text=lorem.paragraph())
 
@@ -72,9 +54,9 @@ class TestSite(base.TestBase):
     def test_reply(self):
         response = self.retrieve(
                 self.host + 'comment/post/',
-                object_pk=17,
+                object_pk=1,
                 parent_id=1,
-                content_type='derrickpetzold.Post',
+                content_type='derrickpetzold.post',
                 title=lorem.words(random.randint(3, 6), common=False),
                 text=lorem.paragraph())
 

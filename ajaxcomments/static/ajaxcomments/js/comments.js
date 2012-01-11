@@ -66,13 +66,14 @@
       var comment_id = $(comment).attr('id').replace('reply', 'comment');
       var comment = $('#' + comment_id + ' p');
       $('#parent_id').attr('value', comment_id);
-      $('.comment-text').text(comment.html());
+      $('.comment-text').text(comment.html()));
 
-      /* XXX: This is a werid hardcode. */
+      /* XXX: This is a werid hardcode. That is doesn't quite work but
+       * I suppose its close enough. */
       if (comment.height() == 16) {
-          $(".comment-reply").dialog({width: 640, height: 730});
+          $(".comment-reply").dialog({width: 590, height: 730});
       } else {
-          $(".comment-reply").dialog({width: 640, height: 740 + comment.height()});
+          $(".comment-reply").dialog({width: 590, height: 790 + comment.height()});
       }
     }
 
