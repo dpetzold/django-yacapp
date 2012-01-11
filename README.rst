@@ -3,7 +3,7 @@ Yet Another Commenting App
 **Django commenting app that works something like hackernews.
 
 Supports threading, ajax and email notifications. It is the commenting system
-used on my blog at http://derrickpetzold.com (demos are there). I wrote it
+used on my blog at https://derrickpetzold.com (demos are there). I wrote it
 since I just wanted really simple commenting support and from what I could tell
 there was not an app out there that did everything I wanted. Ie one would
 support ajax but not threading etc. I also had a difficuly time finding demos
@@ -20,7 +20,9 @@ that go for it.
 
 Installation
 ------------
-#. pip install -e git+https://github.com/dpetzold/django-yacapp
+#. Get the source.
+
+   pip install -e git+https://github.com/dpetzold/django-yacapp
 
 #. Add yacapp INSTALL_APPS your project's ``settings.py`` file::
 
@@ -50,81 +52,81 @@ Usage
 `jQuery <http://jquery.com/>` and `jQuery UI <http://jqueryui.com/>` for
 the dialog popups. file::
 
-  {% yacapp_tags %}
+    {% yacapp_tags %}
 
-  {% with comment_count=post.comment_count %}
-  <h2 class="comment-count">{{ comment_count }} Comment{{ comment_count|pluralize }}</h2>
-  <hr/>
-  {% endwith %}
+    {% with comment_count=post.comment_count %}
+    <h2 class="comment-count">{{ comment_count }} Comment{{ comment_count|pluralize }}</h2>
+    <hr/>
+    {% endwith %}
 
-  <div class="comments">
-    {% comments for post with "include/comment.html" %}
-  </div>
+    <div class="comments">
+      {% comments for post with "include/comment.html" %}
+    </div>
 
-  <div class="comment-edit" title="Edit comment">
-    <form action="#">
-      <input type="hidden" id="comment_id"></input>
-      <div class="fieldWrapper lastFieldWrapper">
-        <label for="id_edit">Edit:</label>
-        <textarea id="id_edit"></textarea>
-      </div>
-      <button class="edit-save" type="submit">Save</button>
-    </form>
-  </div>
+    <div class="comment-edit" title="Edit comment">
+      <form action="#">
+        <input type="hidden" id="comment_id"></input>
+        <div class="fieldWrapper lastFieldWrapper">
+          <label for="id_edit">Edit:</label>
+          <textarea id="id_edit"></textarea>
+        </div>
+        <button class="edit-save" type="submit">Save</button>
+      </form>
+    </div>
 
-  <div class="comment-reply" title="Reply to comment">
-    <p class="comment-text"></p>
-    <form action="#">
-      <input type="hidden" id="parent_id"></input>
-      <div class="fieldWrapper lastFieldWrapper">
-        <label for="id_reply">Reply:</label>
-        <textarea id="id_reply"></textarea>
-      </div>
-      <button class="post-reply" type="submit">Save</button>
-    </form>
-  </div>
+    <div class="comment-reply" title="Reply to comment">
+      <p class="comment-text"></p>
+      <form action="#">
+        <input type="hidden" id="parent_id"></input>
+        <div class="fieldWrapper lastFieldWrapper">
+          <label for="id_reply">Reply:</label>
+          <textarea id="id_reply"></textarea>
+        </div>
+        <button class="post-reply" type="submit">Save</button>
+      </form>
+    </div>
 
-  <div class="comment-form">
-    <form action="#">
+    <div class="comment-form">
+      <form action="#">
 
-        <label class="comment-label" for="id_text">
-        Comment as <span class="display-name">{{ request.user.get_profile.display_name }}</span> (<a class="change- settings" href="#">change</a>):</label>
+          <label class="comment-label" for="id_text">
+          Comment as <span class="display-name">{{ request.user.get_profile.display_name }}</span> (<a class="change- settings" href="#">change</a>):</label>
 
-        <textarea id="id_text"></textarea>
-      <button class="post-button" type="submit">Post</button>
-    </form>
-  </div>
+          <textarea id="id_text"></textarea>
+        <button class="post-button" type="submit">Post</button>
+      </form>
+    </div>
 
 #. Create your template for displaying the comment. file::
 
-  <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
-    <p id="p-{{ comment.id }}">{{ comment.text|safe }}</p>
-    <ul>
-      <li>by {{ comment.user.get_profile.display_name }}</li>
-      <li>{{ comment.created|timesince }} ago</li>
-    </ul>
-    
-    <ul class="right">
-      {% if request.user == comment.user %}
-      <li>
-        <a id="edit-{{ comment.id }}" onclick="comment_edit(this, event)" href="#">Edit</a>
-      </li>
-      <li>
-        <a id="delete-{{ comment.id }}" onclick="comment_delete(this, event)" href="#">Delete</a>
-      </li>
-      {% else %}
-      <li>
-        <a id="reply-{{ comment.id }}" onclick="comment_reply(this, event)" href="#">Reply</a>
-      </li>
+    <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
+      <p id="p-{{ comment.id }}">{{ comment.text|safe }}</p>
+      <ul>
+        <li>by {{ comment.user.get_profile.display_name }}</li>
+        <li>{{ comment.created|timesince }} ago</li>
+      </ul>
+      
+      <ul class="right">
+        {% if request.user == comment.user %}
+        <li>
+          <a id="edit-{{ comment.id }}" onclick="comment_edit(this, event)" href="#">Edit</a>
+        </li>
+        <li>
+          <a id="delete-{{ comment.id }}" onclick="comment_delete(this, event)" href="#">Delete</a>
+        </li>
+        {% else %}
+        <li>
+          <a id="reply-{{ comment.id }}" onclick="comment_reply(this, event)" href="#">Reply</a>
+        </li>
+        {% endif %}
+      </ul>
+      
+      {% if replies %}
+        <div class="replies">
+          {{ replies|safe }}
+        </div>
       {% endif %}
-    </ul>
-    
-    {% if replies %}
-      <div class="replies">
-        {{ replies|safe }}
-      </div>
-    {% endif %}
-  </div>
+    </div>
 
 #. Notice the {{ replies }} subsitution. That is how the recursion is handled for the multi-level
 commment replies.
