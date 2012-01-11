@@ -1,6 +1,6 @@
 Yet Another Commenting App
 ==========================
-**Django commenting app that is something like hackernews.
+**Django commenting app that works something like hackernews.
 
 Supports threading, ajax and email notifications. It is the commenting system
 used on my blog at http://derrickpetzold.com (demos are there). I wrote it
@@ -39,7 +39,7 @@ Installation
 Usage
 -----
 
-#. Update your models to support the generic relation.
+#. Update your models to support the generic relation. file::
 
     comments = generic.GenericRelation(yacapp_models.Comment,
                 content_type_field='content_type',
@@ -126,7 +126,7 @@ the dialog popups. file::
     {% endif %}
   </div>
 
-Notice the {{ replies }} subsitution. That is how the recursion is handled for the multi-level
+#. Notice the {{ replies }} subsitution. That is how the recursion is handled for the multi-level
 commment replies.
 
 Note: The js events are inline because I was not sure how to associate the events when the 
@@ -140,7 +140,7 @@ you started. Hopefully it doesn't suck too bad. Good Luck!!
 Email notifications
 -------------------
 
-Here is how you could support email notifications.
+Here is how you could support email notifications. file::
 
 def comment_posted(sender, comment, request, **kwargs):
     from dakku import email_util
