@@ -18,7 +18,7 @@ from ajaxcomments import models
 
 import logging
 
-logger = logging.getLogger('django.ajaxcomments')
+logger = logging.getLogger(__name__)
 
 class GetContentObjectError(Exception):
     pass

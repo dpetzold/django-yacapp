@@ -1,12 +1,7 @@
 <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
   <p id="p-{{ comment.id }}">{{ comment.text|safe }}</p>
   <ul>
-    {% if comment.user.get_full_name %}
-      <li>by {{ comment.user.get_full_name }}</li>
-    {% else %}
-      <li>by {{ comment.user.username }}</li>
-    {% endif %}
-
+    <li>by {{ comment.user.get_profile.display_name }}</li>
     <li>{{ comment.created|timesince }} ago</li>
   </ul>
 

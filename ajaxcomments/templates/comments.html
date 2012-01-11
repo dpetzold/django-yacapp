@@ -1,0 +1,89 @@
+{% load ajaxcomments_tags %}
+
+<div>
+  {% with comment_count=post.comment_count %}
+  <h2 class="comment-count">{{ comment_count }} Comment{{ comment_count|pluralize }}</h2>
+  <hr/>
+  {% endwith %}
+
+  <div class="comments">
+    {% comments for post with "include/comment.html" %}
+  </div>
+
+  <div class="comment-edit" title="Edit comment">
+    <form action="#">
+      <input type="hidden" id="comment_id"></input>
+      <div class="fieldWrapper lastFieldWrapper">
+        <label for="id_edit">Edit:</label>
+        <textarea id="id_edit"></textarea>
+      </div>
+      <button class="edit-save" type="submit">Save</button>
+    </form>
+  </div>
+
+  <div class="comment-reply" title="Reply to comment">
+    <p class="comment-text"></p>
+    <form action="#">
+      <input type="hidden" id="parent_id"></input>
+      <div class="fieldWrapper lastFieldWrapper">
+        <label for="id_reply">Reply:</label>
+        <textarea id="id_reply"></textarea>
+      </div>
+      <button class="post-reply" type="submit">Save</button>
+    </form>
+  </div>
+
+  <div class="settings-dialog" title="Change Settings">
+    <form action="#">
+      <div class="fieldWrapper lastFieldWrapper">
+        <label for="id_display">Display Name:</label>
+        <input type="text" id="id_display" value="{{ request.user.get_profile.display_name }}"></input>
+      </div>
+      <div class="fieldWrapper lastFieldWrapper">
+        <label for="id_email">Email:</label>
+        <input type="text" id="id_email" value="{{ request.user.email }}"></input>
+      </div>
+      <div class="fieldWrapper">
+        <label for="id_email">Receive email on comment replies:</label>
+
+        <input type="checkbox" id="id_subscribed" checked="{{ request.user.get_profile.subscribed }}"></input>
+      </div>
+      <button class="save-settings" type="submit">Save</button>
+    </form>
+  </div>
+
+  <div class="error"></div>
+
+  {% if request.user.is_authenticated %}
+  <div class="comment-form">
+    <form action="#">
+
+        <label class="comment-label" for="id_text">
+        Comment as <span class="display-name">{{ request.user.get_profile.display_name }}</span> (<a class="change-settings" href="#">change</a>):</label>
+
+        <textarea id="id_text"></textarea>
+      <button class="post-button" type="submit">Post</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="login-form">
+    <h2>Login to comment:</h2> 
+    <ul>
+      <li>
+      <a href="{% url socialauth_begin 'twitter' %}?next={% url post-view post.slug %}"><img src="{{ STATIC_URL }}auth/twitter_32.png"/></a>
+      </li>
+      <li>
+      <a href="{% url socialauth_begin 'google' %}?next={% url post-view post.slug %}"><img src="{{ STATIC_URL }}auth/google_32.png"/></a>
+      </li>
+      <li>
+      <a href="{% url socialauth_begin 'github' %}?next={% url post-view post.slug %}"><img src="{{ STATIC_URL }}auth/github_32.png"/></a>
+      </li>
+      <li>
+      <a href="{% url socialauth_begin 'linkedin' %}?next={% url post-view post.slug %}"><img src="{{ STATIC_URL }}auth/linkedin_32.png"/></a>
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+
+
+</div>
