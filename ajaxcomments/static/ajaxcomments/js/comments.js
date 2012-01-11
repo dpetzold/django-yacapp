@@ -67,7 +67,13 @@
       var comment = $('#' + comment_id + ' p');
       $('#parent_id').attr('value', comment_id);
       $('.comment-text').text(comment.html());
-      $(".comment-reply").dialog({width: 640, height: 900});
+
+      /* XXX: This is a werid hardcode. */
+      if (comment.height() == 16) {
+          $(".comment-reply").dialog({width: 640, height: 730});
+      } else {
+          $(".comment-reply").dialog({width: 640, height: 740 + comment.height()});
+      }
     }
 
     window.comment_postreply = function(event) {
