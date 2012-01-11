@@ -18,13 +18,13 @@ import re
 import tempfile
 import time
 
-from baku import progress
-from baku import stream
-from baku import temp
-from baku import util
-from baku import string_util
-from baku.test import base
-from baku.test import formatter
+from bakku import progress
+from bakku import stream
+from bakku import temp
+from bakku import util
+from bakku import string_util
+from bakku.test import base
+from bakku.test import formatter
 
 from derrickpetzold import settings
 from derrickpetzold import models
