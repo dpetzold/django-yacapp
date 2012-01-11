@@ -1,6 +1,6 @@
 Yet Another Commenting App
 ==========================
-**Django commenting app that works something like hackernews.
+**Django commenting app that works something like hackernews.**
 
 Supports threading, ajax and email notifications. It is the commenting system
 used on my blog at https://derrickpetzold.com (demos are there). I wrote it
@@ -24,17 +24,17 @@ Installation
 
    pip install -e git+https://github.com/dpetzold/django-yacapp
 
-#. Add yacapp INSTALL_APPS your project's ``settings.py`` file::
+#. Add yacapp INSTALL_APPS your project's ``settings.py``
 
     'yacapp',
 
-#. Add url include to your project's ``urls.py`` file::
+#. Add url include to your project's ``urls.py``
 
     (r'^comments/', include('yacapp.urls')),
 
 #. Ensure ``django-yacapp`` static media is accessible, see `managing static files <https://docs.djangoproject.com/en/dev/howto/static-files/>`_.
 
-#. Run ``syncdb`` file::
+#. Run syncdb
 
     python manage.py syncdb
 
@@ -50,7 +50,7 @@ Usage
 
 #. Create your template for posting and displaying the comments. Requires
 `jQuery <http://jquery.com/>` and `jQuery UI <http://jqueryui.com/>` for
-the dialog popups. file::
+the dialog popups.
 
     {% yacapp_tags %}
 
@@ -97,7 +97,7 @@ the dialog popups. file::
       </form>
     </div>
 
-#. Create your template for displaying the comment. file::
+#. Create your template for displaying the comment.
 
     <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
       <p id="p-{{ comment.id }}">{{ comment.text|safe }}</p>
@@ -128,7 +128,7 @@ the dialog popups. file::
       {% endif %}
     </div>
 
-#. Notice the {{ replies }} subsitution. That is how the recursion is handled for the multi-level
+Notice the {{ replies }} subsitution. That is how the recursion is handled for the multi-level
 commment replies.
 
 Note: The js events are inline because I was not sure how to associate the events when the 
@@ -144,16 +144,16 @@ Email notifications
 
 Here is how you could support email notifications. file::
 
-def comment_posted(sender, comment, request, **kwargs):
-    from dakku import email_util
+    def comment_posted(sender, comment, request, **kwargs):
+        from dakku import email_util
 
-    for username, email in settings.ADMINS:
-        email_util.send_email(
-            email,
-            'email/comment_was_posted.msg',
-            comment=comment,
-            settings=settings)
+        for username, email in settings.ADMINS:
+            email_util.send_email(
+                email,
+                'email/comment_was_posted.msg',
+                comment=comment,
+                settings=settings)
 
-    logger.info('%s posted a comment' % (request.user))
+        logger.info('%s posted a comment' % (request.user))
 
-yacapp_signals.comment_was_posted.connect(comment_posted)
+    yacapp_signals.comment_was_posted.connect(comment_posted)
