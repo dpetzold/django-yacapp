@@ -20,21 +20,21 @@ that go for it.
 
 Installation
 ------------
-#. Get the source.
+#. Get the source.::
 
    pip install -e git+https://github.com/dpetzold/django-yacapp
 
-#. Add yacapp INSTALL_APPS your project's ``settings.py``
+#. Add yacapp INSTALL_APPS your project's ``settings.py``::
 
     'yacapp',
 
-#. Add url include to your project's ``urls.py``
+#. Add url include to your project's ``urls.py``::
 
     (r'^comments/', include('yacapp.urls')),
 
 #. Ensure ``django-yacapp`` static media is accessible, see `managing static files <https://docs.djangoproject.com/en/dev/howto/static-files/>`_.
 
-#. Run syncdb
+#. Run syncdb::
 
     python manage.py syncdb
 
