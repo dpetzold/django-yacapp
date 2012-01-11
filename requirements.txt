@@ -1,0 +1,1 @@
+-e git+https://dpetzold@github.com/dpetzold/dakku.git#egg=dakku
