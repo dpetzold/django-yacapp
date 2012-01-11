@@ -10,11 +10,11 @@ import json
 import logging
 import time
 
-from dago.ajax import AjaxResponse
-from dago import log
+from dakku.ajax import AjaxResponse
+from dakku import log
 
-from ajaxcomments import signals
-from ajaxcomments import models
+from yacapp import signals
+from yacapp import models
 
 import logging
 

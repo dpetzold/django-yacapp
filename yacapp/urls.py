@@ -1,7 +1,7 @@
 
 from django.conf.urls.defaults import patterns, url
 
-from ajaxcomments import views
+from yacapp import views
 
 urlpatterns = patterns('',
     url(r'^delete/', views.comment_delete, name='comment-delete'),
