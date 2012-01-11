@@ -13,7 +13,7 @@ import time
 from dago.ajax import AjaxResponse
 from dago import log
 
-#from ajaxcomments import signals
+from ajaxcomments import signals
 from ajaxcomments import models
 
 import logging
@@ -76,10 +76,18 @@ def comment_post(request, template='comment.html'):
 
     comment.save()
 
+
     content_object.comment_count += 1
     content_object.save()
 
-    logger.info('%s added a comment %s' % (request.user, comment.user))
+    logger.info('%s added a comment' % (request.user))
+
+    signals.comment_was_posted.send(
+        sender=comment.__class__,
+        comment=comment,
+        request=request,
+    )
+
     return AjaxResponse(True,
             comment=loader.render_to_string(template, {
                 'comment':comment,
