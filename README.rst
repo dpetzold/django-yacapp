@@ -2,8 +2,8 @@ Yet Another Commenting App
 ==========================
 **Django commenting app that works something like hackernews.**
 
-Supports threading, ajax and email notifications. It is the commenting system
-used on my blog at https://derrickpetzold.com (demos are there). I wrote it
+Supports message threading, ajax and email notifications. It is the commenting 
+system used on my blog at https://derrickpetzold.com (demos are there). I wrote it
 since I just wanted really simple commenting support and from what I could tell
 there was not an app out there that did everything I wanted. Ie one would
 support ajax but not threading etc. I also had a difficuly time finding demos
@@ -12,29 +12,29 @@ for excuse to create an app anyways.
 
 The reason is doesn't use django.contrib.comments is probably not a good one.
 I just didn't need all the stuff in there like moderation, anonymous posting
-etc. The hard work was in the template rendering so if you just want to take
-that go for it.
+etc. The interesting work was in the template rendering so if you just want to 
+take that go for it.
 
 .. contents:: Contents
     :depth: 5
 
 Installation
 ------------
-#. Get the source.::
+#. Get the source.
 
     pip install -e git+https://github.com/dpetzold/django-yacapp
 
-#. Add yacapp to INSTALLED_APPS your project's ``settings.py``::
+#. Add yacapp to INSTALLED_APPS your project's ``settings.py``
 
     'yacapp',
 
-#. Add url include to your project's ``urls.py``::
+#. Add url include to your project's ``urls.py``
 
     (r'^comments/', include('yacapp.urls')),
 
 #. Ensure ``django-yacapp`` static media is accessible, see `managing static files <https://docs.djangoproject.com/en/dev/howto/static-files/>`_.
 
-#. Run syncdb::
+#. Run syncdb
 
     python manage.py syncdb
 
