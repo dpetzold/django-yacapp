@@ -6,7 +6,7 @@ import logging
 
 register = template.Library()
 
-logger = logging.getLogger('django.ajaxcomments')
+logger = logging.getLogger(__name__)
 
 class RenderComments(template.Node):
 

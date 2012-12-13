@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 class GetContentObjectError(Exception):
     pass
 
+# Taken from django/contrib/comments/views/comments.py:post_comment
 def get_content_object(content_type, object_pk):
 
     # Look up the object we're trying to comment about
@@ -75,7 +76,6 @@ def comment_post(request, template='comment.html'):
         comment.level = comment.parent.level + 1
 
     comment.save()
-
 
     content_object.comment_count += 1
     content_object.save()
