@@ -20,28 +20,28 @@ take that go for it.
 
 Installation
 ------------
-#. Get the source.
+#. Get the source::
 
     pip install -e git+https://github.com/dpetzold/django-yacapp
 
-#. Add yacapp to INSTALLED_APPS your project's ``settings.py``
+#. Add yacapp to INSTALLED_APPS your project's ``settings.py``::
 
     'yacapp',
 
-#. Add url include to your project's ``urls.py``
+#. Add url include to your project's ``urls.py``::
 
     (r'^comments/', include('yacapp.urls')),
 
 #. Ensure ``django-yacapp`` static media is accessible, see `managing static files <https://docs.djangoproject.com/en/dev/howto/static-files/>`_.
 
-#. Run syncdb
+#. Run syncdb::
 
     python manage.py syncdb
 
 Usage
 -----
 
-#. Update your models to support the generic relation.
+#. Update your models to support the generic relation::
 
     comments = generic.GenericRelation(yacapp_models.Comment,
                 content_type_field='content_type',
@@ -49,7 +49,7 @@ Usage
 
     comment_count = models.IntegerField(default=0)
 
-#. Create your template for posting and displaying the comments. Requires `jQuery <http://jquery.com/>` and `jQuery UI <http://jqueryui.com/>` for the dialog popups.
+#. Create your template for posting and displaying the comments. Requires `jQuery <http://jquery.com/>` and `jQuery UI <http://jqueryui.com/>` for the dialog popups::
 
     {% yacapp_tags %}
 
@@ -96,7 +96,7 @@ Usage
       </form>
     </div>
 
-#. Create your template for displaying the comment.
+#. Create your template for displaying the comment::
 
     <div class="comment level-{{ comment.level }}" id="comment-{{ comment.id }}">
       <p id="p-{{ comment.id }}">{{ comment.text|safe }}</p>
@@ -136,12 +136,12 @@ comment was inserted into the DOM. If you know how to do that with jquery please
 #. Include the js where its needed
 
 #. Debug. This is my first app so its going to be rough but there enough should be there to get 
-you started. Hopefully it doesn't suck too bad. Good Luck!!
+you started. Good Luck!!
 
 Email notifications
 -------------------
 
-Here is how you could support email notifications.
+Here is how you could support email notifications::
 
     def comment_posted(sender, comment, request, **kwargs):
         from dakku import email_util
